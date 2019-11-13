@@ -45,6 +45,32 @@ def apply_coupons(cart, coupons)
   # Consult README for inputs and outputs
   #
   # REMEMBER: This method **should** update cart
+  index = 0
+  newCart = []
+  while (index < coupons.size)
+    #look for coupon match in the cart
+    item_found = find_item_by_name_in_collection(coupons[index][:item], cart)
+    discounted_item = "#{coupons[index][:item]} W/COUPON"
+    item_w_coupon = find_item_by_name_in_collection(discounted_item, cart)
+    
+    if (item_found && item_found[:count] >= coupons[index][:num])
+        if (item_w_coupon)
+            item_w_coupon[:count] += coupons[:index][:num]
+            item_found[:count] -= coupons[index][:num]
+        else
+            item_w_coupon = {
+              :item => discounted_item,
+              :price => coupons[index][:cost]/coupons[index][:num],
+              :clearance => item_found[:clearance],
+              :count => coupons[index][:num]
+            }
+            cart << item_w_coupon
+            item_found[:count] -= coupons[index][:num]
+        end  
+    end
+    index += 1
+  end #WHILE
+  cart
 end
 
 def apply_clearance(cart)
